@@ -2,4 +2,6 @@ type Todo @model @auth(rules: [{allow: public}]) {
   id: ID!
   description: String
   isComplete: Boolean!
+  name: String!
 }
+ 
