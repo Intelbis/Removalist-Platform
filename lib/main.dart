@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 // amplify packages we will need to use
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 
 // amplify configuration and models that should have been generated for you
 import 'amplifyconfiguration.dart';
@@ -48,7 +50,12 @@ class _TodosPageState extends State<TodosPage> {
   List<Todo> _todos = [];
 
   // amplify plugins
-  final _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+  final _dataStorePlugin =
+  AmplifyDataStore(modelProvider: ModelProvider.instance);
+
+  final AmplifyAPI _apiPlugin = AmplifyAPI();
+  final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
+
 
   @override
   void initState() {
@@ -92,8 +99,9 @@ class _TodosPageState extends State<TodosPage> {
 
     try {
 
+
       // add Amplify plugins
-      await Amplify.addPlugins([_dataStorePlugin]);
+      await Amplify.addPlugins([_dataStorePlugin, _apiPlugin, _authPlugin]);
 
       // configure Amplify
       //
