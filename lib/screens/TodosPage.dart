@@ -3,11 +3,9 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../amplifyconfiguration.dart';
 import '../models/ModelProvider.dart';
-import '../models/Todo.dart';
 
 
 class TodosPage extends StatefulWidget {
@@ -253,11 +251,6 @@ class _AddTodoFormState extends State<AddTodoForm> {
     } catch (e) {
       print('An error occurred while saving Todo: $e');
     }
-
-
-
-
-
 
   }
 
