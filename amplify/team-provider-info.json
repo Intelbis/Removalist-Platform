@@ -10,6 +10,11 @@
       "StackName": "amplify-removalist-dev-233109",
       "StackId": "arn:aws:cloudformation:ap-southeast-2:148852451613:stack/amplify-removalist-dev-233109/2bb41c40-2de8-11ed-bb38-0a0876d224b8",
       "AmplifyAppId": "d2grdjz28b5off"
+    },
+    "categories": {
+      "auth": {
+        "removalist": {}
+      }
     }
   }
 }

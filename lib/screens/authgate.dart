@@ -2,6 +2,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:ilabs_removal_app/screens/TodosPage.dart';
 
 import '../amplifyconfiguration.dart';
 
@@ -36,11 +37,7 @@ class _authgateState extends State<authgate> {
     return Authenticator(
       child: MaterialApp(
         builder: Authenticator.builder(),
-        home: const Scaffold(
-          body: Center(
-            child: Text('You are logged in!'),
-          ),
-        ),
+        home:  TodosPage(),
       ),
     );
   }
