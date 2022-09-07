@@ -43,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.6"
+  amplify_authenticator:
+    dependency: "direct main"
+    description:
+      name: amplify_authenticator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   amplify_core:
     dependency: transitive
     description:
@@ -167,6 +174,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
