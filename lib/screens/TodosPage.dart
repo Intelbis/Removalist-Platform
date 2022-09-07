@@ -1,11 +1,19 @@
+// dart async library we will refer to when setting up real time updates
 import 'dart:async';
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_datastore/amplify_datastore.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
+
+// flutter and ui libraries
 import 'package:flutter/material.dart';
+
+// amplify packages we will need to use
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
+
 import '../amplifyconfiguration.dart';
 import '../models/ModelProvider.dart';
+import '../models/Todo.dart';
+
+// amplify configuration and models that should have been generated for you
+
 
 
 class TodosPage extends StatefulWidget {
@@ -17,9 +25,6 @@ class TodosPage extends StatefulWidget {
 
 class _TodosPageState extends State<TodosPage> {
 
-  // subscription of Todo QuerySnapshots - to be initialized at runtime
-  late StreamSubscription<QuerySnapshot<Todo>> _subscription;
-
   // loading ui state - initially set to a loading state
   bool _isLoading = true;
 
@@ -27,20 +32,13 @@ class _TodosPageState extends State<TodosPage> {
   List<Todo> _todos = [];
 
   // amplify plugins
-  final _dataStorePlugin =
-  AmplifyDataStore(modelProvider: ModelProvider.instance);
-
-  final AmplifyAPI _apiPlugin = AmplifyAPI();
-  final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
-
+  final _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
 
   @override
   void initState() {
 
     // kick off app initialization
     _initializeApp();
-
-
     // to be filled in a later step
     super.initState();
   }
@@ -56,29 +54,20 @@ class _TodosPageState extends State<TodosPage> {
     // configure Amplify
     await _configureAmplify();
 
-    // Query and Observe updates to Todo models. DataStore.observeQuery() will
-    // emit an initial QuerySnapshot with a list of Todo models in the local store,
-    // and will emit subsequent snapshots as updates are made
-    //
-    // each time a snapshot is received, the following will happen:
-    // _isLoading is set to false if it is not already false
-    // _todos is set to the value in the latest snapshot
-    _subscription = Amplify.DataStore.observeQuery(Todo.classType)
-        .listen((QuerySnapshot<Todo> snapshot) {
-      setState(() {
-        if (_isLoading) _isLoading = false;
-        _todos = snapshot.items;
-      });
+    // after configuring Amplify, update loading ui state to loaded state
+    setState(() {
+      _isLoading = false;
     });
+
+    // to be filled in a later step
   }
 
   Future<void> _configureAmplify() async {
 
     try {
 
-
       // add Amplify plugins
-      await Amplify.addPlugins([_dataStorePlugin, _apiPlugin, _authPlugin]);
+      await Amplify.addPlugins([_dataStorePlugin]);
 
       // configure Amplify
       //
@@ -100,7 +89,7 @@ class _TodosPageState extends State<TodosPage> {
       appBar: AppBar(
         title: const Text('My Todo List'),
       ),
-
+      // body: const Center(child: CircularProgressIndicator()),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : TodosList(todos: _todos),
@@ -151,30 +140,10 @@ class TodoItem extends StatelessWidget {
   final Todo todo;
 
   void _deleteTodo(BuildContext context) async {
-
-    try {
-      // to delete data from DataStore, we pass the model instance to
-      // Amplify.DataStore.delete()
-      await Amplify.DataStore.delete(todo);
-    } catch (e) {
-      print('An error occurred while deleting Todo: $e');
-    }
     // to be filled in a later step
   }
 
   Future<void> _toggleIsComplete() async {
-
-
-    // copy the Todo we wish to update, but with updated properties
-    final updatedTodo = todo.copyWith(isComplete: !todo.isComplete);
-    try {
-
-      // to update data in DataStore, we again pass an instance of a model to
-      // Amplify.DataStore.save()
-      await Amplify.DataStore.save(updatedTodo);
-    } catch (e) {
-      print('An error occurred while saving Todo: $e');
-    }
     // to be filled in a later step
   }
 
@@ -228,30 +197,7 @@ class _AddTodoFormState extends State<AddTodoForm> {
   final _descriptionController = TextEditingController();
 
   Future<void> _saveTodo() async {
-
-    // get the current text field contents
-    final name = _nameController.text;
-    final description = _descriptionController.text;
-
-    // create a new Todo from the form values
-    // `isComplete` is also required, but should start false in a new Todo
-    final newTodo = Todo(
-      name: name,
-      description: description.isNotEmpty ? description : null,
-      isComplete: false,
-    );
-
-    try {
-      // to write data to DataStore, we simply pass an instance of a model to
-      // Amplify.DataStore.save()
-      await Amplify.DataStore.save(newTodo);
-
-      // after creating a new Todo, close the form
-      Navigator.of(context).pop();
-    } catch (e) {
-      print('An error occurred while saving Todo: $e');
-    }
-
+    // to be filled in a later step
   }
 
   @override
