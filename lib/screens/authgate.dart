@@ -10,7 +10,6 @@ import 'package:ilabs_removal_app/screens/TodosPage.dart';
 
 import '../amplifyconfiguration.dart';
 import '../models/ModelProvider.dart';
-import '../models/Todo.dart';
 
 
 
@@ -22,6 +21,12 @@ class authgate extends StatefulWidget {
 }
 
 class _authgateState extends State<authgate> {
+
+
+  final _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+  final AmplifyAPI _apiPlugin = AmplifyAPI();
+  final AmplifyAuthCognito _authCognito = AmplifyAuthCognito();
+
   @override
   void initState() {
     super.initState();
@@ -37,16 +42,20 @@ class _authgateState extends State<authgate> {
   //     print('Error configuring Amplify: $e');
   //   }
   // }
-  final _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
-  final _authPlugin = AmplifyAuthCognito();
-  final _apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
+
+
+
+  // final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
 
   Future<void> _configureAmplify() async {
 
     try {
 
       // add Amplify plugins
-      await Amplify.addPlugins([_authPlugin, _dataStorePlugin, _apiPlugin,]);
+
+      // await Amplify.addPlugin(AmplifyAuthCognito());
+      await Amplify.addPlugins([ _authCognito, _dataStorePlugin, _apiPlugin]);
+
 
       // configure Amplify
       //
