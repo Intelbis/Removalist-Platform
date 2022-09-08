@@ -1,20 +1,13 @@
-// dart async library we will refer to when setting up real time updates
 import 'dart:async';
-
-// flutter and ui libraries
-import 'package:flutter/material.dart';
-
-// amplify packages we will need to use
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
-
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../amplifyconfiguration.dart';
 import '../models/ModelProvider.dart';
 import '../models/Todo.dart';
-
-// amplify configuration and models that should have been generated for you
-
-
 
 class TodosPage extends StatefulWidget {
   const TodosPage({Key? key}) : super(key: key);
@@ -25,6 +18,10 @@ class TodosPage extends StatefulWidget {
 
 class _TodosPageState extends State<TodosPage> {
 
+  late StreamSubscription<QuerySnapshot<Todo>> _subscription;
+
+
+
   // loading ui state - initially set to a loading state
   bool _isLoading = true;
 
@@ -32,7 +29,13 @@ class _TodosPageState extends State<TodosPage> {
   List<Todo> _todos = [];
 
   // amplify plugins
-  final _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+  // final _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+  // final _authPlugin = AmplifyAuthCognito();
+  // final _apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
+
+
+
+
 
   @override
   void initState() {
@@ -52,36 +55,22 @@ class _TodosPageState extends State<TodosPage> {
   Future<void> _initializeApp() async {
 
     // configure Amplify
-    await _configureAmplify();
+    // await _configureAmplify();
+
 
     // after configuring Amplify, update loading ui state to loaded state
-    setState(() {
-      _isLoading = false;
+    _subscription = Amplify.DataStore.observeQuery(Todo.classType)
+        .listen((QuerySnapshot<Todo> snapshot) {
+      setState(() {
+        if (_isLoading) _isLoading = false;
+        _todos = snapshot.items;
+      });
     });
 
     // to be filled in a later step
   }
 
-  Future<void> _configureAmplify() async {
 
-    try {
-
-      // add Amplify plugins
-      await Amplify.addPlugins([_dataStorePlugin]);
-
-      // configure Amplify
-      //
-      // note that Amplify cannot be configured more than once!
-      await Amplify.configure(amplifyconfig);
-    } catch (e) {
-
-      // error handling can be improved for sure!
-      // but this will be sufficient for the purposes of this tutorial
-      print('An error occurred while configuring Amplify: $e');
-    }
-
-    // to be filled in a later step
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +186,30 @@ class _AddTodoFormState extends State<AddTodoForm> {
   final _descriptionController = TextEditingController();
 
   Future<void> _saveTodo() async {
+
+    // get the current text field contents
+    final name = _nameController.text;
+    final description = _descriptionController.text;
+
+    // create a new Todo from the form values
+    // `isComplete` is also required, but should start false in a new Todo
+    final newTodo = Todo(
+      name: name,
+      description: description.isNotEmpty ? description : null,
+      isComplete: false,
+    );
+
+    try {
+      // to write data to DataStore, we simply pass an instance of a model to
+      // Amplify.DataStore.save()
+      await Amplify.DataStore.save(newTodo);
+
+      // after creating a new Todo, close the form
+      Navigator.of(context).pop();
+    } catch (e) {
+      print('An error occurred while saving Todo: $e');
+    }
+
     // to be filled in a later step
   }
 
@@ -233,3 +246,4 @@ class _AddTodoFormState extends State<AddTodoForm> {
     );
   }
 }
+
