@@ -159,6 +159,25 @@ class Todo extends Model {
           ModelOperation.UPDATE,
           ModelOperation.DELETE,
           ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.OWNER,
+        ownerField: "owner",
+        identityClaim: "cognito:username",
+        provider: AuthRuleProvider.USERPOOLS,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.PRIVATE,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
         ])
     ];
     

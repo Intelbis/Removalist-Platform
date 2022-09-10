@@ -1,6 +1,7 @@
-type Todo @model @auth(rules: [{allow: public}]) {
+type Todo @model @auth(rules: [{allow: public}, {allow: owner}, {allow: private}]) {
   id: ID!
   description: String
   isComplete: Boolean!
   name: String!
-} 
+}
+ 

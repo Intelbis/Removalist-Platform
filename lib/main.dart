@@ -24,21 +24,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+
   @override
   void initState() {
+
+
     super.initState();
     _configureAmplify();
   }
 
-  void _configureAmplify() async {
-    try {
-      await Amplify.addPlugin(AmplifyAuthCognito());
-      await Amplify.configure(amplifyconfig);
-      print('Successfully configured');
-    } on Exception catch (e) {
-      print('Error configuring Amplify: $e');
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +46,27 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+
+void _configureAmplify() async {
+
+
+
+
+  final datastorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+  // Add the following line and update your function call with `addPlugins`
+  final api = AmplifyAPI();
+  await Amplify.addPlugins([datastorePlugin, api ]);
+  await Amplify.addPlugin(AmplifyAuthCognito());
+
+  try {
+    await Amplify.configure(amplifyconfig);
+  } on AmplifyAlreadyConfiguredException {
+    print('Tried to reconfigure Amplify; this can occur when your app restarts on Android.');
+  }
+}
+
+
 
 class TodosPage extends StatefulWidget {
   const TodosPage({Key? key}) : super(key: key);
@@ -73,10 +90,10 @@ class _TodosPageState extends State<TodosPage> {
   // amplify plugins
   // final _dataStorePlugin =
   // AmplifyDataStore(modelProvider: ModelProvider.instance);
-  final _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+  // final _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
 
-  final AmplifyAPI _apiPlugin = AmplifyAPI();
-  final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
+  // final AmplifyAPI _apiPlugin = AmplifyAPI();
+  // final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
 
 
   @override
@@ -99,7 +116,7 @@ class _TodosPageState extends State<TodosPage> {
   Future<void> _initializeApp() async {
 
     // configure Amplify
-    await _configureAmplify();
+    // await _configureAmplify();
 
     // Query and Observe updates to Todo models. DataStore.observeQuery() will
     // emit an initial QuerySnapshot with a list of Todo models in the local store,
@@ -116,28 +133,28 @@ class _TodosPageState extends State<TodosPage> {
       });
     });
   }
-
-  Future<void> _configureAmplify() async {
-
-    try {
-
-
-      // add Amplify plugins
-      await Amplify.addPlugins([_dataStorePlugin, _apiPlugin, _authPlugin]);
-
-      // configure Amplify
-      //
-      // note that Amplify cannot be configured more than once!
-      await Amplify.configure(amplifyconfig);
-    } catch (e) {
-
-      // error handling can be improved for sure!
-      // but this will be sufficient for the purposes of this tutorial
-      print('An error occurred while configuring Amplify: $e');
-    }
-
-    // to be filled in a later step
-  }
+  //
+  // Future<void> _configureAmplify() async {
+  //
+  //   try {
+  //
+  //
+  //     // add Amplify plugins
+  //     // await Amplify.addPlugins([_dataStorePlugin, _apiPlugin]);
+  //
+  //     // configure Amplify
+  //     //
+  //     // note that Amplify cannot be configured more than once!
+  //     // await Amplify.configure(amplifyconfig);
+  //   } catch (e) {
+  //
+  //     // error handling can be improved for sure!
+  //     // but this will be sufficient for the purposes of this tutorial
+  //     print('An error occurred while configuring Amplify: $e');
+  //   }
+  //
+  //   // to be filled in a later step
+  // }
 
   @override
   Widget build(BuildContext context) {
