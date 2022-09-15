@@ -19,5 +19,12 @@ export type AmplifyDependentResourcesAttributes = {
         "userPoolGroups": {
             "removalistUsersGroupRole": "string"
         }
+    },
+    "analytics": {
+        "removalist": {
+            "Region": "string",
+            "Id": "string",
+            "appName": "string"
+        }
     }
 }

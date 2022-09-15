@@ -14,7 +14,8 @@
     "categories": {
       "auth": {
         "removalist": {},
-        "userPoolGroups": {}
+        "userPoolGroups": {},
+        "true": {}
       }
     }
   }

@@ -1,0 +1,21 @@
+{
+    "appName": "removalist",
+    "roleName": "pinpointLambdaRoleb4c84f3c",
+    "cloudformationPolicyName": "cloudformationPolicyb4c84f3c",
+    "cloudWatchPolicyName": "cloudWatchPolicyb4c84f3c",
+    "pinpointPolicyName": "pinpointPolicyb4c84f3c",
+    "authPolicyName": "pinpoint_amplify_b4c84f3c",
+    "unauthPolicyName": "pinpoint_amplify_b4c84f3c",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}
