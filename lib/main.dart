@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:ilabs_removal_app/screens/TodosPage.dart';
 
 import 'amplifyconfiguration.dart';
+import 'models/Enquiry.dart';
 import 'models/ModelProvider.dart';
 import 'models/Todo.dart';
 
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     return Authenticator(
       child: MaterialApp(
         builder: Authenticator.builder(),
-        home: const TodosPage(),
+        home: const EnquriesPage(),
       ),
     );
   }
@@ -68,24 +69,24 @@ void _configureAmplify() async {
 
 
 
-class TodosPage extends StatefulWidget {
-  const TodosPage({Key? key}) : super(key: key);
+class EnquriesPage extends StatefulWidget {
+  const EnquriesPage({Key? key}) : super(key: key);
 
   @override
-  State<TodosPage> createState() => _TodosPageState();
+  State<EnquriesPage> createState() => _EnquriesPageState();
 }
 
 
-class _TodosPageState extends State<TodosPage> {
+class _EnquriesPageState extends State<EnquriesPage> {
 
   // subscription of Todo QuerySnapshots - to be initialized at runtime
-  late StreamSubscription<QuerySnapshot<Todo>> _subscription;
+  late StreamSubscription<QuerySnapshot<Enquiry>> _subscription;
 
   // loading ui state - initially set to a loading state
   bool _isLoading = true;
 
   // list of Todos - initially empty
-  List<Todo> _todos = [];
+  List<Enquiry> _enquiries = [];
 
   // amplify plugins
   // final _dataStorePlugin =
@@ -125,11 +126,11 @@ class _TodosPageState extends State<TodosPage> {
     // each time a snapshot is received, the following will happen:
     // _isLoading is set to false if it is not already false
     // _todos is set to the value in the latest snapshot
-    _subscription = Amplify.DataStore.observeQuery(Todo.classType)
-        .listen((QuerySnapshot<Todo> snapshot) {
+    _subscription = Amplify.DataStore.observeQuery(Enquiry.classType)
+        .listen((QuerySnapshot<Enquiry> snapshot) {
       setState(() {
         if (_isLoading) _isLoading = false;
-        _todos = snapshot.items;
+        _enquiries = snapshot.items;
       });
     });
   }
@@ -160,22 +161,27 @@ class _TodosPageState extends State<TodosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Todo List'),
+        backgroundColor: Colors.redAccent,
+        title: const Text('Enquiries'),
       ),
 
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : TodosList(todos: _todos),
+          : EnquiriesList(enquiries: _enquiries),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddTodoForm()),
+            MaterialPageRoute(builder: (context) => const AddEnquiryForm()),
           );
         },
-        tooltip: 'Add Todo',
+        tooltip: 'Add To do',
         label: Row(
-          children: const [Icon(Icons.add), Text('Add todo')],
+          children: const [Icon(Icons.add), Text('Enquire')],
+
+
+
+          
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -183,41 +189,41 @@ class _TodosPageState extends State<TodosPage> {
   }
 }
 
-class TodosList extends StatelessWidget {
-  const TodosList({
-    required this.todos,
+class EnquiriesList extends StatelessWidget {
+  const EnquiriesList({
+    required this.enquiries,
     Key? key,
   }) : super(key: key);
 
-  final List<Todo> todos;
+  final List<Enquiry> enquiries;
 
   @override
   Widget build(BuildContext context) {
-    return todos.isNotEmpty
+    return enquiries.isNotEmpty
         ? ListView(
         padding: const EdgeInsets.all(8),
-        children: todos.map((todo) => TodoItem(todo: todo)).toList())
+        children: enquiries.map((enquiry) => EnquiryItem(enquiry: enquiry)).toList())
         : const Center(
       child: Text('Tap button below to add a todo!'),
     );
   }
 }
 
-class TodoItem extends StatelessWidget {
-  const TodoItem({
-    required this.todo,
+class EnquiryItem extends StatelessWidget {
+  const EnquiryItem({
+    required this.enquiry,
     Key? key,
   }) : super(key: key);
 
   final double iconSize = 24.0;
-  final Todo todo;
+  final Enquiry enquiry;
 
-  void _deleteTodo(BuildContext context) async {
+  void _deleteEnquiry(BuildContext context) async {
 
     try {
       // to delete data from DataStore, we pass the model instance to
       // Amplify.DataStore.delete()
-      await Amplify.DataStore.delete(todo);
+      await Amplify.DataStore.delete(enquiry);
     } catch (e) {
       print('An error occurred while deleting Todo: $e');
     }
@@ -228,12 +234,12 @@ class TodoItem extends StatelessWidget {
 
 
     // copy the Todo we wish to update, but with updated properties
-    final updatedTodo = todo.copyWith(isComplete: !todo.isComplete);
+    final updatedEnquiry = enquiry.copyWith(isComplete: !enquiry.isComplete);
     try {
 
       // to update data in DataStore, we again pass an instance of a model to
       // Amplify.DataStore.save()
-      await Amplify.DataStore.save(updatedTodo);
+      await Amplify.DataStore.save(updatedEnquiry);
     } catch (e) {
       print('An error occurred while saving Todo: $e');
     }
@@ -248,7 +254,7 @@ class TodoItem extends StatelessWidget {
           _toggleIsComplete();
         },
         onLongPress: () {
-          _deleteTodo(context);
+          _deleteEnquiry(context);
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -258,16 +264,16 @@ class TodoItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    todo.name,
+                    enquiry.name,
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Text(todo.description ?? 'No description'),
+                  Text(enquiry.description ?? 'No description'),
                 ],
               ),
             ),
             Icon(
-                todo.isComplete
+                enquiry.isComplete
                     ? Icons.check_box
                     : Icons.check_box_outline_blank,
                 size: iconSize),
@@ -278,18 +284,18 @@ class TodoItem extends StatelessWidget {
   }
 }
 
-class AddTodoForm extends StatefulWidget {
-  const AddTodoForm({Key? key}) : super(key: key);
+class AddEnquiryForm extends StatefulWidget {
+  const AddEnquiryForm({Key? key}) : super(key: key);
 
   @override
-  State<AddTodoForm> createState() => _AddTodoFormState();
+  State<AddEnquiryForm> createState() => _AddEnquiryFormState();
 }
 
-class _AddTodoFormState extends State<AddTodoForm> {
+class _AddEnquiryFormState extends State<AddEnquiryForm> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  Future<void> _saveTodo() async {
+  Future<void> _saveEnquiry() async {
 
     // get the current text field contents
     final name = _nameController.text;
@@ -297,7 +303,7 @@ class _AddTodoFormState extends State<AddTodoForm> {
 
     // create a new Todo from the form values
     // `isComplete` is also required, but should start false in a new Todo
-    final newTodo = Todo(
+    final newEnquiry = Enquiry(
       name: name,
       description: description.isNotEmpty ? description : null,
       isComplete: false,
@@ -306,7 +312,7 @@ class _AddTodoFormState extends State<AddTodoForm> {
     try {
       // to write data to DataStore, we simply pass an instance of a model to
       // Amplify.DataStore.save()
-      await Amplify.DataStore.save(newTodo);
+      await Amplify.DataStore.save(newEnquiry);
 
       // after creating a new Todo, close the form
       Navigator.of(context).pop();
@@ -325,7 +331,7 @@ class _AddTodoFormState extends State<AddTodoForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Todo'),
+        title: const Text('Send Enquiry'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -344,7 +350,7 @@ class _AddTodoFormState extends State<AddTodoForm> {
                     filled: true, labelText: 'Description'),
               ),
               ElevatedButton(
-                onPressed: _saveTodo,
+                onPressed: _saveEnquiry,
                 child: const Text('Save'),
               )
             ],

@@ -1,6 +1,7 @@
-type Todo @model @auth(rules: [{allow: owner}, {allow: public}, {allow: private}, {allow: private, provider: iam}]) {
+type Enquiry @model @auth(rules: [{allow: owner}, {allow: public}, {allow: private}, {allow: private, provider: iam}]) {
   id: ID!
   description: String
   isComplete: Boolean!
   name: String!
-} 
+}
+ 
