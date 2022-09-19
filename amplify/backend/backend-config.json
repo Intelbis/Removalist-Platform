@@ -82,5 +82,11 @@
         }
       ]
     }
+  },
+  "analytics": {
+    "removalist": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }
