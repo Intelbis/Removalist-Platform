@@ -181,7 +181,7 @@ class _EnquriesPageState extends State<EnquriesPage> {
 
 
 
-          
+
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -268,6 +268,13 @@ class EnquiryItem extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
+
+                  Text(
+                    enquiry.noBedrooms,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+
                   Text(enquiry.description ?? 'No description'),
                 ],
               ),
@@ -294,12 +301,14 @@ class AddEnquiryForm extends StatefulWidget {
 class _AddEnquiryFormState extends State<AddEnquiryForm> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _noBedroomsController = TextEditingController();
 
   Future<void> _saveEnquiry() async {
 
     // get the current text field contents
     final name = _nameController.text;
     final description = _descriptionController.text;
+    final noBedrooms = _noBedroomsController.text;
 
     // create a new Todo from the form values
     // `isComplete` is also required, but should start false in a new Todo
@@ -307,6 +316,9 @@ class _AddEnquiryFormState extends State<AddEnquiryForm> {
       name: name,
       description: description.isNotEmpty ? description : null,
       isComplete: false,
+      noBedrooms: noBedrooms,
+
+
     );
 
     try {
@@ -346,6 +358,12 @@ class _AddEnquiryFormState extends State<AddEnquiryForm> {
               ),
               TextFormField(
                 controller: _descriptionController,
+                decoration: const InputDecoration(
+                    filled: true, labelText: 'Description'),
+              ),
+
+              TextFormField(
+                controller: _noBedroomsController,
                 decoration: const InputDecoration(
                     filled: true, labelText: 'Description'),
               ),

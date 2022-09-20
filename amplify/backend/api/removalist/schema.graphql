@@ -3,5 +3,6 @@ type Enquiry @model @auth(rules: [{allow: owner}, {allow: public}, {allow: priva
   description: String
   isComplete: Boolean!
   name: String!
+  noBedrooms: String!
 }
  
